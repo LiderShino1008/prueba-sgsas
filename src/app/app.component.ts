@@ -31,6 +31,14 @@ export class AppComponent {
     mensaje: new FormControl('Se ha realizado la facturación del mes de marzo para su clave {v1} , su consumo es de {v2} kWh el monto a pagar es de Lps {v3} fecha máxima de pago {v4}.', Validators.required)
   });
 
+  // Getters
+  get telefono(): any {
+    return this.formulario.get('telefono');
+  }
+  get mensaje(): any {
+    return this.formulario.get('mensaje');
+  }
+
   // constructor() {}
 
   verNotificacion(): void {
@@ -55,7 +63,7 @@ export class AppComponent {
       this.sujeto.clave = this.randomNumber(1000, 9999);
       
       if (this.formulario.get("mensaje") != null) {
-        let m = this.formulario.get("mensaje");
+        let m = this.formulario.get("mensaje")?.value;
         let msj = '';
         if (m.includes("{v3}")) {
           // V2 == CONSUMO
@@ -88,10 +96,10 @@ export class AppComponent {
     console.log('Enviar mensajes. Generar IDs y mostrar tabla de resultados');
     for (let j = 0; j < this.personas.length; j++) {
       const psa = this.personas[j];
-      psa.id = randomAlphanumeric(8) + randomAlphanumeric(4) + randomAlphanumeric(4) + randomAlphanumeric(4) + randomAlphanumeric(12);
-      results.push(psa);
+      psa.id = this.randomAlphanumeric(8) + this.randomAlphanumeric(4) + this.randomAlphanumeric(4) + this.randomAlphanumeric(4) + this.randomAlphanumeric(12);
+      this.results.push(psa);
     }
-    verNotificacion();
+    this.verNotificacion();
   }
 
   randomNumber(maximum: number, minimum: number) {

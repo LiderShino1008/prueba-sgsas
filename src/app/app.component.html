@@ -29,7 +29,7 @@
         <div class="card shadow p-3 border-round">
           <div class="mb-3">
             <p class="h6 mb-4">Seguimiento Mensajes</p>
-            <form [formGroup]=""formulario>
+            <form [formGroup]="formulario">
               <div class="mb-3">
                 <label for="telefono" class="form-label">Teléfono:</label>
                 <input [ngClass]="{'is-valid':telefono.valid, 'is-invalid':telefono.invalid && (telefono.dirty || telefono.touched)}" formControlName="telefono" type="tel" class="form-control" id="telefono" required="">
