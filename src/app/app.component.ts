@@ -26,6 +26,13 @@ export class AppComponent {
     pagar: ''
   };
 
+  // Meses abreviados
+  meses: any = {
+    Jan: '01', Feb: '02', Mar: '03', Apr: '04',
+    May: '05', Jun: '06', Jul: '07', Aug: '08',
+    Sep: '09', Oct: '10', Nov: '11', Dec: '12'
+  }
+
   formulario = new FormGroup({
     telefono: new FormControl('', Validators.required),
     mensaje: new FormControl('Se ha realizado la facturación del mes de marzo para su clave {v1} , su consumo es de {v2} kWh el monto a pagar es de Lps {v3} fecha máxima de pago {v4}.', Validators.required)
@@ -52,31 +59,29 @@ export class AppComponent {
   }
 
   generarFecha(): void {
-    let ff = Date.now() + 15;
+    let ff = this.addDays(new Date(), 15);
     console.log('Fecha máxima de pago: ', ff);
   }
 
   guardarTelefono(): void {
     console.log('Guardar cliente en arreglo temporal "personas"');
     if (this.formulario.valid) {
-      this.sujeto.telefono = this.formulario.get('telefono');
+      this.sujeto.telefono = this.formulario.value.telefono
       this.sujeto.clave = this.randomNumber(1000, 9999);
       
-      if (this.formulario.get("mensaje") != null) {
-        let m = this.formulario.get("mensaje")?.value;
-        let msj = '';
-        if (m.includes("{v3}")) {
-          // V2 == CONSUMO
-          this.sujeto.consumo = this.randomNumber(100, 999);
-          this.sujeto.pagar = (this.sujeto.consumo<=150) ? this.sujeto.consumo*2 : this.sujeto.consumo*6;
-          msj = m.replace(/{v1}/gi, this.sujeto.clave).replace(/{v2}/gi, this.sujeto.consumo).replace(/{v3}/gi, this.sujeto.pagar).replace(/{v4}/gi, (Date.now()+15) );
-        } else {
-          // V2 == GESTION
-          this.sujeto.gestion = this.randomNumber(100000, 999999);
-          msj = m.replace(/{v1}/gi, this.sujeto.clave).replace(/{v2}/gi, this.sujeto.gestion);
-        }
-        this.sujeto.mensaje = msj;
+      let m = this.formulario.value.mensaje;
+      let msj = '';
+      if (m.includes("{v3}")) {
+        // V2 == CONSUMO
+        this.sujeto.consumo = this.randomNumber(100, 999);
+        this.sujeto.pagar = (this.sujeto.consumo<=150) ? this.sujeto.consumo*2 : this.sujeto.consumo*6;
+        msj = m.replace(/{v1}/gi, this.sujeto.clave).replace(/{v2}/gi, this.sujeto.consumo).replace(/{v3}/gi, this.sujeto.pagar).replace(/{v4}/gi, this.addDays(new Date(), 15) );
+      } else {
+        // V2 == GESTION
+        this.sujeto.gestion = this.randomNumber(100000, 999999);
+        msj = m.replace(/{v1}/gi, this.sujeto.clave).replace(/{v2}/gi, this.sujeto.gestion);
       }
+      this.sujeto.mensaje = msj;
       console.log('Elemento a guardar tmp: ', this.sujeto);
       this.personas.push(this.sujeto);
       // Limpiar propiedades
@@ -96,9 +101,10 @@ export class AppComponent {
     console.log('Enviar mensajes. Generar IDs y mostrar tabla de resultados');
     for (let j = 0; j < this.personas.length; j++) {
       const psa = this.personas[j];
-      psa.id = this.randomAlphanumeric(8) + this.randomAlphanumeric(4) + this.randomAlphanumeric(4) + this.randomAlphanumeric(4) + this.randomAlphanumeric(12);
+      psa.id = this.randomAlphanumeric(8) +'-'+ this.randomAlphanumeric(4) +'-'+ this.randomAlphanumeric(4) +'-'+ this.randomAlphanumeric(4) +'-'+ this.randomAlphanumeric(12);
       this.results.push(psa);
     }
+    this.personas = [];
     this.verNotificacion();
   }
 
@@ -116,5 +122,12 @@ export class AppComponent {
       result += characters.charAt(Math.floor(Math.random() * cLength));
     }
     return result;
+  }
+  
+  addDays(fecha: Date, sumarDias: number) {
+    let tomorrow = new Date(fecha.setDate(fecha.getDate()+sumarDias)).toString();
+    let to = tomorrow.split(" ");
+    let fechaFinal = to[2]+'/'+ this.meses[to[1]] +'/'+to[3];
+    return fechaFinal;
   }
 }
