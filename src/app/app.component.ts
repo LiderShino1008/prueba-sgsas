@@ -92,8 +92,6 @@ export class AppComponent {
         consumo: '',
         pagar: ''
       };
-    } else {
-      alert('Formulario incompleto: hay campos vacíos');
     }
   }
 

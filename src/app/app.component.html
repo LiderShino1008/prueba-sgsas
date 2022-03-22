@@ -59,7 +59,7 @@
             <p class="h6 mb-4">Información Cliente</p>
             <div *ngIf="personas.length>0; then hayClientes else ningunCliente"></div>
             <ng-template #ningunCliente>
-              <pre>No se ha agregado ningún nuevo cliente a la lista para enviar.<br>Revisa la tabla de resultados haciendo clic en el botón "Notificación"</pre>
+              <p class="small">No se han agregado nuevos clientes a la lista para enviar.<br>Revise la tabla de resultados haciendo clic en el botón "Notificación"</p>
             </ng-template>
             <ng-template #hayClientes>
               <table class="table table-hover">
@@ -93,7 +93,7 @@
             <p class="h6 mb-4">Resultados</p>
             <div *ngIf="results.length>0; then hayResultados else ningunResultado"></div>
             <ng-template #ningunResultado>
-              <pre>No se ha agregado ningún cliente.</pre>
+              <p class="small">No se han recibido clientes para asignarles su respectivo ID.</p>
             </ng-template>
             <ng-template #hayResultados>
               <table class="table table-hover">
