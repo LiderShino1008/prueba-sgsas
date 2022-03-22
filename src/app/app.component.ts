@@ -104,8 +104,8 @@ export class AppComponent {
       psa.id = this.randomAlphanumeric(8) +'-'+ this.randomAlphanumeric(4) +'-'+ this.randomAlphanumeric(4) +'-'+ this.randomAlphanumeric(4) +'-'+ this.randomAlphanumeric(12);
       this.results.push(psa);
     }
-    this.personas = [];
     this.verNotificacion();
+    this.personas = [];
   }
 
   randomNumber(maximum: number, minimum: number) {
