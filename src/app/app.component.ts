@@ -10,54 +10,103 @@ export class AppComponent {
   // Declaraciones
   title = 'canal-masivo';
   visible = true;
-  backendHost: String = '';
+  // backendHost: String = '';
+  
+  // Clientes temporales
   personas: any = [];
+  // Resultados (clientes con ID)
+  results: any = [];
+
+  // Cliente temporal
   sujeto: any = {
     telefono: '',
     mensaje: '',
     gestion: '',
-    consumo: ''
+    consumo: '',
+    pagar: ''
   };
 
   formulario = new FormGroup({
     telefono: new FormControl('', Validators.required),
-    mensaje: new FormControl('', Validators.required)
+    mensaje: new FormControl('Se ha realizado la facturación del mes de marzo para su clave {v1} , su consumo es de {v2} kWh el monto a pagar es de Lps {v3} fecha máxima de pago {v4}.', Validators.required)
   });
 
-  constructor() {}
+  // constructor() {}
 
   verNotificacion(): void {
     this.visible = false;
-    console.log('Ahora muestra tabla results');
+    console.log('Área visible: tabla de resultados');
   }
 
   verSeguimiento(): void {
     this.visible = true;
-    console.log('Ahora muestra seguimiento de mensajes');
+    console.log('Área visible: seguimiento de clientes');
   }
 
   generarFecha(): void {
-    console.log('Generar nueva fecha');
     let ff = Date.now() + 15;
+    console.log('Fecha máxima de pago: ', ff);
   }
 
-  enviarMensaje(): void {
-    console.log('Enviar mensajes');
+  guardarTelefono(): void {
+    console.log('Guardar cliente en arreglo temporal "personas"');
     if (this.formulario.valid) {
-      let mm = 'Se ha realizado la facturación del mes de marzo para su clave {v1} , su consumo es de {v2} kWh el monto a pagar es de Lps {v3} fecha máxima de pago {v4}.';
       this.sujeto.telefono = this.formulario.get('telefono');
-      this.sujeto.mensaje = this.formulario.get('mensaje');
       this.sujeto.clave = this.randomNumber(1000, 9999);
-      this.sujeto.gestion = this.randomNumber(100000, 999999);
-      this.sujeto.consumo = this.randomNumber(100, 999);
+      
+      if (this.formulario.get("mensaje") != null) {
+        let m = this.formulario.get("mensaje");
+        let msj = '';
+        if (m.includes("{v3}")) {
+          // V2 == CONSUMO
+          this.sujeto.consumo = this.randomNumber(100, 999);
+          this.sujeto.pagar = (this.sujeto.consumo<=150) ? this.sujeto.consumo*2 : this.sujeto.consumo*6;
+          msj = m.replace(/{v1}/gi, this.sujeto.clave).replace(/{v2}/gi, this.sujeto.consumo).replace(/{v3}/gi, this.sujeto.pagar).replace(/{v4}/gi, (Date.now()+15) );
+        } else {
+          // V2 == GESTION
+          this.sujeto.gestion = this.randomNumber(100000, 999999);
+          msj = m.replace(/{v1}/gi, this.sujeto.clave).replace(/{v2}/gi, this.sujeto.gestion);
+        }
+        this.sujeto.mensaje = msj;
+      }
+      console.log('Elemento a guardar tmp: ', this.sujeto);
+      this.personas.push(this.sujeto);
+      // Limpiar propiedades
+      this.sujeto = {
+        telefono: '',
+        mensaje: '',
+        gestion: '',
+        consumo: '',
+        pagar: ''
+      };
     } else {
       alert('Formulario incompleto: hay campos vacíos');
     }
+  }
+
+  enviarMensaje(): void {
+    console.log('Enviar mensajes. Generar IDs y mostrar tabla de resultados');
+    for (let j = 0; j < this.personas.length; j++) {
+      const psa = this.personas[j];
+      psa.id = randomAlphanumeric(8) + randomAlphanumeric(4) + randomAlphanumeric(4) + randomAlphanumeric(4) + randomAlphanumeric(12);
+      results.push(psa);
+    }
+    verNotificacion();
   }
 
   randomNumber(maximum: number, minimum: number) {
     let min = Math.ceil(minimum);
     let max = Math.floor(maximum);
     return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  randomAlphanumeric(longitud: number) {
+    let result = '';
+    let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let cLength = characters.length;
+    for (let i = 0; i < longitud; i++) {
+      result += characters.charAt(Math.floor(Math.random() * cLength));
+    }
+    return result;
   }
 }

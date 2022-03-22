@@ -1,74 +1,123 @@
 <div class="bg-light">
-  <div class="surface-section px-4 py-5 px-md-6 px-lg-8">
-    <div class="flex align-items-start flex-column justify-lg-content-between flex-lg-row">
-        <div>
-            <div class="font-medium text-3xl text-900">Canal masivos</div>
-            <div class="flex align-items-center text-700 flex-wrap">
-                <div class="mr-5 flex align-items-center mt-3">
-                    <span>Inicio</span>
-                </div>
-                <div class="mr-5 flex align-items-center mt-3">
-                    <span>Canales</span>
-                </div>
-                <div class="flex align-items-center mt-3">
-                    <span>Masivo</span>
-                </div>
-            </div>
-        </div>
-    </div>
+  <div class="bg-white nav p-3">
+    <span>Bienvenido, <b>Héctor Sabillón</b></span>
   </div>
-  <!-- <router-outlet></router-outlet> -->
+  <ul class="bg-light nav p-3">
+    <li class="nav-item">
+      <p class="nav-link border-right border-1 mb-0 mr-2 h5">Canal Masivos</p>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link border-bottom-0" href="#"><small>Inicio</small></a>
+    </li>
+    <li class="align-self-center">
+      <span href="#"><small class="opacity-50">•</small></span>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link border-bottom-0" href="#"><small>Canales</small></a>
+    </li>
+    <li class="align-self-center">
+      <span href="#"><small class="opacity-50">•</small></span>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link border-bottom-0" href="#"><small>Masivo</small></a>
+    </li>
+  </ul>
   <div *ngIf="visible; then seguimiento else notificacion"></div>
-  <ng-template #seguimiento class="surface-ground px-4 py-5 px-md-6 px-lg-8">
+  <ng-template #seguimiento class="pt-3 pb-5 container">
     <div class="row">
-        <div class="col-12 col-md-6">
-            <div class="card shadow-2 p-3 border-round">
-                <div class="flex justify-content-between mb-3">
-                    <div>
-                        <span class="block text-500 font-medium mb-3">Seguimiento Mensajes</span>
-                        <div class="pt-3">
-                          <label for="telefono" class="block text-900 font-medium mb-2">Teléfono</label>
-                          <input id="telefono" type="tel" pInputText class="w-full mb-3">
-                  
-                          <label for="mensaje" class="block text-900 font-medium mb-2">Mensaje</label>
-                          <input id="mensaje" type="text" pInputText class="w-full mb-3" value="Se ha realizado la facturación del mes de marzo para su clave {v1} , su consumo es de {v2} kWh el monto a pagar es de Lps {v3} fecha máxima de pago {v4}.">
-                  
-                          <button class="btn btn-primary" (click)="verNotificacion()">Notificación</button>
-                          <button class="btn btn-primary" (click)="generarFecha()">Fecha</button>
-                          <button class="btn btn-primary" (click)="enviarMensaje()">Enviar mensaje</button>
-                      </div>
-                    </div>
-                </div>
-            </div>
+      <div class="col-12 col-lg-6 mb-3 mb-lg-0">
+        <div class="card shadow p-3 border-round">
+          <div class="mb-3">
+            <p class="h6 mb-4">Seguimiento Mensajes</p>
+            <form [formGroup]=""formulario>
+              <div class="mb-3">
+                <label for="telefono" class="form-label">Teléfono:</label>
+                <input [ngClass]="{'is-valid':telefono.valid, 'is-invalid':telefono.invalid && (telefono.dirty || telefono.touched)}" formControlName="telefono" type="tel" class="form-control" id="telefono" required="">
+                <div *ngIf= "telefono.errors?.required" class="invalid-feedback text-left">Campo obligatorio.</div>
+              </div>
+              <div class="d-flex mb-3">
+                <button type="button" class="btn btn-info" (click)="guardarTelefono">+ Agregar</button>
+              </div>
+              <div class="mb-3">
+                <label for="mensaje" class="form-label">Mensaje:</label>
+                <!-- <input [ngClass]="{'is-valid':mensaje.valid, 'is-invalid':mensaje.invalid && (mensaje.dirty || mensaje.touched)}" formControlName="mensaje" type="text" class="form-control" id="mensaje" value="Se ha realizado la facturación del mes de marzo para su clave {v1} , su consumo es de {v2} kWh el monto a pagar es de Lps {v3} fecha máxima de pago {v4}." required=""> -->
+                <input [ngClass]="{'is-valid':mensaje.valid, 'is-invalid':mensaje.invalid && (mensaje.dirty || mensaje.touched)}" formControlName="mensaje" type="text" class="form-control" id="mensaje" required="">
+                <div *ngIf= "mensaje.errors?.required" class="invalid-feedback text-left">Campo obligatorio.</div>
+              </div>
+              <div class="d-flex justify-content-between">
+                <button type="button" class="btn btn-warning" (click)="verNotificacion()">Notificación</button>
+                <button type="button" class="btn btn-success" (click)="generarFecha()">Fecha</button>
+                <button type="submit" class="btn btn-primary" (click)="enviarMensaje()">Enviar mensajes</button>
+              </div>
+            </form>
+          </div>
         </div>
-        <div class="col-12 col-md-6">
-            <div class="card shadow-2 p-3 border-round">
-                <div class="flex justify-content-between mb-3">
-                    <div>
-                        <span class="block text-500 font-medium mb-3">Información Cliente</span>
-                        <table class="table">
-                          <thead>
-                            <tr>
-                              <th scope="col">Teléfono</th>
-                              <th scope="col">Mensaje</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <tr *ngFor="let per of personas">
-                              <th>{{per.telefono}}</th>
-                              <td>{{per.mensaje}}</td>
-                            </tr>
-                          </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+      </div>
+      <div class="col-12 col-lg-6">
+        <div class="card shadow p-3 border-round h-100">
+          <div class="mb-3">
+            <p class="h6 mb-4">Información Cliente</p>
+            <div *ngIf="personas.length>0; then hayClientes else ningunCliente"></div>
+            <ng-template #ningunCliente>
+              <pre>No se ha agregado ningún cliente.</pre>
+            </ng-template>
+            <ng-template #hayClientes>
+              <table class="table table-hover">
+                <thead class="text-primary">
+                  <tr>
+                    <th scope="col">Teléfono</th>
+                    <th scope="col">Mensaje</th>
+                    </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let per of personas">
+                    <th>{{per.telefono}}</th>
+                    <td>{{per.mensaje}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </ng-template>
+          </div>
         </div>
+      </div>
     </div>
   </ng-template>
-  
-  <ng-template #notificacion class="surface-ground px-4 py-5 px-md-6 px-lg-8">
-    <p>Tabla results</p>
-    <button class="btn btn-primary" (click)="verSeguimiento()">Regresar a seguimiento de mensajes</button>
+  <ng-template #notificacion class="pt-3 pb-5 container">
+    <div class="d-flex mb-3">
+      <button class="btn btn-link" (click)="verSeguimiento()">← Regresar a seguimiento de mensajes</button>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <div class="card shadow p-3 border-round h-100">
+          <div class="mb-3">
+            <p class="h6 mb-4">Resultados</p>
+            <div *ngIf="results.length>0; then hayResultados else ningunResultado"></div>
+            <ng-template #ningunResultado>
+              <pre>No se ha agregado ningún cliente.</pre>
+            </ng-template>
+            <ng-template #hayResultados>
+              <table class="table table-hover">
+                <thead class="text-primary">
+                  <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Teléfono</th>
+                    <th scope="col">Mensaje</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let res of results">
+                    <th>{{res.id}}</th>
+                    <td>{{res.telefono}}</td>
+                    <td>{{res.mensaje}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+    </div>
   </ng-template>
 </div>
+
+<!-- <router-outlet></router-outlet> -->
